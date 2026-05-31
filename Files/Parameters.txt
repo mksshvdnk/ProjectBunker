@@ -51,3 +51,49 @@ Weakness
 - Fear of heights
 - Physically weak
 - Trust issues
+
+Personality
+- Introverted
+- Extroverted
+- Optimistic
+- Pessimistic
+- Impulsive
+- Calculated
+- Empathetic
+- Stubborn
+- Loyal
+- Manipulative
+
+Background
+- Former soldier
+- Ex-doctor
+- Engineer
+- Teacher
+- Farmer
+- Criminal
+- Politician
+- Athlete
+- Scientist
+- Clergy
+
+Equipment
+- First aid kit
+- Hunting rifle
+- Radio transmitter
+- Tool kit
+- Seed bag
+- Water filter
+- Night vision goggles
+- Survival knife
+- Generator
+- Solar panel
+
+Mental state
+- Stable
+- Anxious
+- Traumatized
+- Paranoid
+- Depressed
+- Resilient
+- Overconfident
+- Detached

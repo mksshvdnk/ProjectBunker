@@ -34,7 +34,7 @@ commands = {
 @app.command()
 def start():
     global running 
-    while running == True:
+    while running:
         command = input("What can I do for you?\nType 'help' for a list of commands.\n")    
         if command in commands:
             print("\n----------------------")

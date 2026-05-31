@@ -4,25 +4,25 @@ A command-line Python tool that procedurally generates randomized player cards f
 
 ## Changelog
 
+### v3.0
+- Player cards now support any number of custom attributes — just add a new section to `Parameters.txt`, no code changes needed
+- `Parameters.txt` sections can appear in any order without affecting output
+- Minor improvements to value parsing and internal refactoring
+
 ### v2.0
-- Added interactive CLI shell with command routing via dictionary, replacing single-command Typer setup
-- Added `quit` and `help` commands; `help` builds itself automatically from the command dictionary
-- Added `index` field to `Playercard` — players are now numbered automatically
-- Added unknown command feedback in the shell
-- Separated CLI logic into `main.py`, keeping `bunkerLogic.py` free of interface concerns
-- Added Typer as a dependency
+- Added an interactive CLI shell — the tool now runs as a persistent session rather than a single command
+- `help` command lists all available commands automatically
+- Minor improvements including player numbering and unknown command feedback
 
 ### v1.0
-- Initial release with basic random player generation
-- `PlayerCardGenerator` parses `Parameters.txt` into feature clusters
-- `Playercard` data container with `age`, `gender`, `skill`, and `weakness` attributes
-- `writePars()` method for formatted console output
-- No third-party dependencies
+- Initial release with basic random player generation from `Parameters.txt`
+- Minor: `writePars()` for console output, no third-party dependencies
 
 ## Features
 
-- Randomly generates player cards with age, gender, skill, and weakness attributes
-- Reads attribute pools from a plain-text `Parameters.txt` file — no code changes needed to customize values
+- Randomly generates player cards with any number of custom attributes
+- Reads attribute pools from a plain-text `Parameters.txt` file — no code changes needed to add new features
+- Sections can appear in any order in `Parameters.txt`
 - Interactive CLI shell with a self-documenting command system
 - Clean separation between logic (`bunkerLogic.py`) and interface (`main.py`)
 
@@ -43,31 +43,37 @@ TopDeveloper/
 
 ## Parameters.txt Format
 
-Define four sections separated by blank lines. Section headers must be exactly `Age`, `Gender`, `Skill`, and `Weakness` (case-sensitive). Sections can appear in any order.
+Define any number of sections separated by blank lines. Each section header must be on its own line, followed by values prefixed with `- `. The four base sections are `Age`, `Gender`, `Skill`, and `Weakness`, but any additional sections will be picked up automatically.
 
 ```
 Age
-Child
-Teen
-Adult
-Senior
+- 18
+- 25
+- 34
+- 45
 
 Gender
-Male
-Female
-Non-binary
+- Male
+- Female
+- Non-binary
 
 Skill
-Swordsmanship
-Archery
-Magic
-Stealth
+- Fast runner
+- Medical knowledge
+- Survival expert
+- Military training
 
 Weakness
-Fire
-Water
-Light
-Darkness
+- Claustrophobic
+- Fear of darkness
+- Low stamina
+- Trust issues
+
+Personality
+- Optimistic
+- Stubborn
+- Loyal
+- Impulsive
 ```
 
 ## Usage
@@ -89,11 +95,11 @@ Available commands:
 Example output:
 
 ```
-Player 1
-Age Adult
-Gender Female
-Skill Magic
-Weakness Fire
+Age : 34
+Gender : Female
+Skill : Medical knowledge
+Weakness : Claustrophobic
+Personality : Loyal
 ```
 
 ## Classes
@@ -105,10 +111,7 @@ Data container for a single player's attributes.
 | Member | Description |
 |---|---|
 | `index` | Player number, increments automatically |
-| `age` | Randomly selected age category |
-| `gender` | Randomly selected gender |
-| `skill` | Randomly selected skill |
-| `weakness` | Randomly selected weakness |
+| `parameters` | Dictionary of all attributes, built dynamically from `Parameters.txt` |
 | `writePars()` | Prints all attributes to the console |
 
 ### `PlayerCardGenerator` (`bunkerLogic.py`)
@@ -119,6 +122,7 @@ Parses `Parameters.txt` and generates player cards.
 |---|---|
 | `parametersPath` | Path to the located `Parameters.txt` file |
 | `players` | List of all generated `Playercard` instances |
+| `parameters` | List of feature names parsed from `Parameters.txt` |
 | `clusters` | Internal line-index map used to locate attribute values in the file |
 | `generateRandomPlayer()` | Randomly samples one value per feature and appends a new `Playercard` to `players` |
 
