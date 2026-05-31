@@ -6,7 +6,8 @@ import random
 #A card of a player
 class Playercard:
 
-    def __init__(self, age,gender, skill, weakness):
+    def __init__(self,index, age,gender, skill, weakness):
+        self.index = index
         self.age = age
         self.gender = gender
         self.skill = skill
@@ -14,7 +15,7 @@ class Playercard:
         
 #Gives player's parameters in a console
     def writePars(self):
-        print(f"Age:{self.age} \nGender {self.gender} \nSkill {self.skill} \nWeakness {self.weakness}")
+        print(f"Player {self.index} \nAge {self.age} \nGender {self.gender} \nSkill {self.skill} \nWeakness {self.weakness}")
 
 
 #Generates player card based on given data  
@@ -78,7 +79,8 @@ class PlayerCardGenerator:
               stats[n] = element.strip();
 
         #create playercard
-        p = Playercard(*stats[:])
+        
+        p = Playercard(len(self.players)+1,*stats[:])
         self.players.append(p);    
       
 

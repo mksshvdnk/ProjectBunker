@@ -1,17 +1,49 @@
-# Player Card Generator
+# Bunker — Player Card Generator
 
-A lightweight Python utility that randomly generates player cards by sampling attributes from a structured text file (`Parameters.txt`).
+A command-line Python tool that procedurally generates randomized player cards from a customizable parameter file.
+
+## Changelog
+
+### v2.0
+- Added interactive CLI shell with command routing via dictionary, replacing single-command Typer setup
+- Added `quit` and `help` commands; `help` builds itself automatically from the command dictionary
+- Added `index` field to `Playercard` — players are now numbered automatically
+- Added unknown command feedback in the shell
+- Separated CLI logic into `main.py`, keeping `bunkerLogic.py` free of interface concerns
+- Added Typer as a dependency
+
+### v1.0
+- Initial release with basic random player generation
+- `PlayerCardGenerator` parses `Parameters.txt` into feature clusters
+- `Playercard` data container with `age`, `gender`, `skill`, and `weakness` attributes
+- `writePars()` method for formatted console output
+- No third-party dependencies
+
+## Features
+
+- Randomly generates player cards with age, gender, skill, and weakness attributes
+- Reads attribute pools from a plain-text `Parameters.txt` file — no code changes needed to customize values
+- Interactive CLI shell with a self-documenting command system
+- Clean separation between logic (`bunkerLogic.py`) and interface (`main.py`)
 
 ## Requirements
 
-- Python 3.10+ (uses structural pattern matching via `match`/`case`)
-- A `Parameters.txt` file somewhere in the working directory tree (see format below)
+- Python 3.10+
+- [Typer](https://typer.tiangolo.com/) (`pip install typer`)
 
-No third-party dependencies — only the standard library (`pathlib`, `random`).
+## Project Structure
+
+```
+TopDeveloper/
+├── bunkerLogic.py      # Core logic — Playercard and PlayerCardGenerator classes
+├── main.py             # CLI shell and command routing
+├── Parameters.txt      # Attribute definitions (customizable)
+└── .gitignore
+```
 
 ## Parameters.txt Format
 
-The file must define four sections, each headed by an exact label on its own line, followed by one value per line, and separated from the next section by a blank line:
+Define four sections separated by blank lines. Section headers must be exactly `Age`, `Gender`, `Skill`, and `Weakness` (case-sensitive). Sections can appear in any order.
 
 ```
 Age
@@ -38,54 +70,64 @@ Light
 Darkness
 ```
 
-The section headers must be exactly: `Age`, `Gender`, `Skill`, `Weakness` (case-sensitive). The sections can appear in any order.
-
 ## Usage
 
-```python
-from player_card_generator import PlayerCardGenerator
+Start the interactive shell:
 
-generator = PlayerCardGenerator()
+```bash
+py main.py start
+```
 
-# Generate a single random player
-generator.generateRandomPlayer()
+Available commands:
 
-# Generate multiple players
-for _ in range(5):
-    generator.generateRandomPlayer()
+| Command | Description |
+|---|---|
+| `generateRandomPlayer` | Generates and prints a random player card |
+| `help` | Lists all available commands |
+| `quit` | Exits the shell |
 
-# Access the generated player cards
-for player in generator.players:
-    print(player.age, player.gender, player.skill, player.weakness)
+Example output:
 
-# Print a player's stats to the console
-generator.players[0].writePars()
+```
+Player 1
+Age Adult
+Gender Female
+Skill Magic
+Weakness Fire
 ```
 
 ## Classes
 
-### `PlayerCardGenerator`
+### `Playercard` (`bunkerLogic.py`)
 
-Parses `Parameters.txt` on construction and manages a collection of generated player cards.
+Data container for a single player's attributes.
 
 | Member | Description |
 |---|---|
-| `parametersPath` | `Path` to the located `Parameters.txt` file |
-| `players` | List of generated `Playercard` instances |
-| `clusters` | 8-element list storing start/end line indices for each feature |
-| `generateRandomPlayer()` | Randomly selects one value per feature and appends a new `Playercard` to `players` |
-
-### `Playercard`
-
-A simple data container for a single player's attributes.
-
-| Attribute | Description |
-|---|---|
+| `index` | Player number, increments automatically |
 | `age` | Randomly selected age category |
 | `gender` | Randomly selected gender |
 | `skill` | Randomly selected skill |
 | `weakness` | Randomly selected weakness |
+| `writePars()` | Prints all attributes to the console |
 
-| Method | Description |
+### `PlayerCardGenerator` (`bunkerLogic.py`)
+
+Parses `Parameters.txt` and generates player cards.
+
+| Member | Description |
 |---|---|
-| `writePars()` | Prints all four attributes to the console |
+| `parametersPath` | Path to the located `Parameters.txt` file |
+| `players` | List of all generated `Playercard` instances |
+| `clusters` | Internal line-index map used to locate attribute values in the file |
+| `generateRandomPlayer()` | Randomly samples one value per feature and appends a new `Playercard` to `players` |
+
+## Architecture
+
+The project follows the **MVP (Model-View-Presenter)** pattern:
+
+- **Model** — `Playercard` holds the data
+- **Presenter** — `PlayerCardGenerator` handles the logic
+- **View** — `main.py` manages user interaction via the CLI
+
+This separation keeps the core logic reusable and independent of the interface — swapping the CLI for a GUI or web frontend would only require changes to `main.py`.
