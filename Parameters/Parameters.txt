@@ -1,0 +1,74 @@
+Age
+18
+21
+25
+30
+34
+40
+45
+52
+60
+67
+
+Gender
+Male
+Female
+Non-binary
+
+Skill
+Fast runner
+Strong leadership
+Medical knowledge
+Engineering skills
+Farming experience
+Excellent stamina
+Sharp eyesight
+Survival expert
+Great cook
+Calm under pressure
+High intelligence
+Mechanical repair skills
+Good negotiator
+Military training
+Creative thinker
+
+Weakness
+Claustrophobic
+Poor eyesight
+Fear of darkness
+Bad temper
+Weak immune system
+Cannot swim
+Fear of blood
+Low stamina
+Easily distracted
+Allergic to dust
+Poor communication skills
+Panic attacks
+Fear of heights
+Physically weak
+Trust issues
+
+Background
+Former soldier
+Ex-doctor
+Engineer
+Teacher
+Farmer
+Criminal
+Politician
+Athlete
+Scientist
+Clergy
+
+Favourite Food
+Canned beans
+Dried fruit and nuts
+Ration packs
+Wild greens
+MREs
+Cured meats
+Pemmican
+Boiled potatoes
+Foraged berries
+Smoked fish

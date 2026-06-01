@@ -1,8 +1,16 @@
 # Bunker — Player Card Generator
 
-A command-line Python tool that procedurally generates randomized player cards from a customizable parameter file.
+A command-line Python tool that procedurally generates randomized player cards from a customizable parameter file, with optional AI-powered content generation via a local language model.
 
 ## Changelog
+
+### v4.0
+- Added AI-powered game generation — generates a full `Parameters.txt` with realistic survival attributes using a local LLM
+- Added AI parameter generation — add a new attribute category to the game at any time using AI
+- Added `setup.py` to automate dependency installation and optional AI model download
+- Ollama server starts automatically in the background when an AI feature is first used
+- Added `generateManyPlayers` command for batch player generation
+- Added `deletePlayer`, `deleteAllPlayers`, and `deleteParameter` commands
 
 ### v3.0
 - Player cards now support any number of custom attributes — just add a new section to `Parameters.txt`, no code changes needed
@@ -21,86 +29,81 @@ A command-line Python tool that procedurally generates randomized player cards f
 ## Features
 
 - Randomly generates player cards with any number of custom attributes
-- Reads attribute pools from a plain-text `Parameters.txt` file — no code changes needed to add new features
-- Sections can appear in any order in `Parameters.txt`
+- AI-powered content generation using a local LLM (no cloud API, no credits)
+- Reads attribute pools from a plain-text `Parameters.txt` — no code changes needed to customize
 - Interactive CLI shell with a self-documenting command system
 - Clean separation between logic (`bunkerLogic.py`) and interface (`main.py`)
 
 ## Requirements
 
 - Python 3.10+
-- [Typer](https://typer.tiangolo.com/) (`pip install typer`)
+- [Ollama](https://ollama.com) (optional, for AI features)
 
-## Project Structure
+## Setup
 
-```
-TopDeveloper/
-├── bunkerLogic.py      # Core logic — Playercard and PlayerCardGenerator classes
-├── main.py             # CLI shell and command routing
-├── Parameters.txt      # Attribute definitions (customizable)
-└── .gitignore
+Run the setup script — it installs dependencies and optionally downloads the AI model:
+
+```bash
+py setup.py
 ```
 
-## Parameters.txt Format
-
-Define any number of sections separated by blank lines. Each section header must be on its own line, followed by values prefixed with `- `. The four base sections are `Age`, `Gender`, `Skill`, and `Weakness`, but any additional sections will be picked up automatically.
-
-```
-Age
-- 18
-- 25
-- 34
-- 45
-
-Gender
-- Male
-- Female
-- Non-binary
-
-Skill
-- Fast runner
-- Medical knowledge
-- Survival expert
-- Military training
-
-Weakness
-- Claustrophobic
-- Fear of darkness
-- Low stamina
-- Trust issues
-
-Personality
-- Optimistic
-- Stubborn
-- Loyal
-- Impulsive
-```
-
-## Usage
-
-Start the interactive shell:
+Then start the program:
 
 ```bash
 py main.py start
 ```
 
-Available commands:
+## Parameters.txt Format
+
+Define any number of sections separated by a blank line. Each section header is a plain text label on its own line, followed by one value per line:
+
+```
+Age
+18
+25
+34
+45
+60
+
+Gender
+Male
+Female
+Non-binary
+
+Skill
+First Aid
+Navigation
+Survival
+Engineering
+
+Weakness
+Claustrophobic
+Fear of darkness
+Low stamina
+Trust issues
+
+Background
+Former soldier
+Ex-doctor
+Engineer
+Farmer
+```
+
+The four base sections (`Age`, `Gender`, `Skill`, `Weakness`) are required. Additional sections are picked up automatically.
+
+## Commands
 
 | Command | Description |
 |---|---|
-| `generateRandomPlayer` | Generates and prints a random player card |
+| `generatePlayer` | Generates and prints a random player card |
+| `generateManyPlayers` | Generates multiple random player cards |
+| `generateNewAIGame` | Uses AI to generate a full new `Parameters.txt` |
+| `addAIParameter` | Uses AI to add a new attribute section to `Parameters.txt` |
+| `deletePlayer` | Deletes a player by index |
+| `deleteAllPlayers` | Deletes all generated players |
+| `deleteParameter` | Deletes a non-base parameter from `Parameters.txt` |
 | `help` | Lists all available commands |
 | `quit` | Exits the shell |
-
-Example output:
-
-```
-Age : 34
-Gender : Female
-Skill : Medical knowledge
-Weakness : Claustrophobic
-Personality : Loyal
-```
 
 ## Classes
 
@@ -121,10 +124,17 @@ Parses `Parameters.txt` and generates player cards.
 | Member | Description |
 |---|---|
 | `parametersPath` | Path to the located `Parameters.txt` file |
-| `players` | List of all generated `Playercard` instances |
-| `parameters` | List of feature names parsed from `Parameters.txt` |
+| `basicParameters` | The four protected base parameters |
+| `parameters` | Full list of all parameters including custom ones |
 | `clusters` | Internal line-index map used to locate attribute values in the file |
-| `generateRandomPlayer()` | Randomly samples one value per feature and appends a new `Playercard` to `players` |
+| `players` | List of all generated `Playercard` instances |
+| `parsePars()` | Parses `Parameters.txt` and rebuilds `parameters` and `clusters` |
+| `generateRandomPlayer()` | Randomly samples one value per feature and appends a new `Playercard` |
+| `generateNewAIGame()` | Uses a local LLM to generate a full new `Parameters.txt` |
+| `addAIParameter(name)` | Uses a local LLM to add a new parameter section to `Parameters.txt` |
+| `deletePlayer(index)` | Removes a player by index |
+| `deleteAllPlayers()` | Clears all players |
+| `deleteParameter(parameter)` | Removes a non-base parameter from the file and rebuilds state |
 
 ## Architecture
 
